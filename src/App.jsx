@@ -1,8 +1,9 @@
 // src/App.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SECODashboard from './pages/SECODashboard';
-import './styles/App.css';
+import SECODashboard from './SECODashboard';
+// Remove incorrect CSS import
+// import './styles/App.css';
 
 const App = () => {
   return (

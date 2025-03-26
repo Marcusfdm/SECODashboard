@@ -1,26 +1,15 @@
+// src/SECODashboard.jsx
 import React, { useState, useEffect } from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  LabelList, ReferenceLine
-} from 'recharts';
 import {
   Info, FileText, Users, Settings, CheckCircle, AlertTriangle, XCircle, Search, Globe, BookOpen, Code, Zap, Clock,
   Activity, Eye, ChevronDown, Smile, ChevronUp, Check
 } from 'lucide-react';
 import { fetchEvaluationData, fetchGuidelineData } from './api/evaluationApi';
-import { TabContainer } from './components/Common/TabContainer';
+import TabContainer from './components/Common/TabContainer';
 import Dashboard from './pages/Dashboard';
 import Guidelines from './pages/Guidelines';
 import Hotspots from './pages/Hotspots';
-import { processNavigationFlowsForHotspots } from './utils/dataProcessing';
-import { 
-  getStatusIcon, 
-  getStatusColor, 
-  getStatusText, 
-  getFactorStatusColor,
-  getFactorStatusText,
-  getDimensionColor
-} from './utils/statusHelpers';
+import { getStatusIcon } from './utils/statusHelpers';
 
 // The main dashboard component
 const SECODashboard = () => {
@@ -35,9 +24,10 @@ const SECODashboard = () => {
   const [selectedDimension, setSelectedDimension] = useState(null);
   const [showGuidelinesForDimension, setShowGuidelinesForDimension] = useState(null);
   const [expandedSections, setExpandedSections] = useState({
-    evaluation: true,
-    transparency: true,
-    devExperience: true
+    technical: true,
+    social: true,
+    organizational: true,
+    economic: true
   });
   const [activeGuidelineTab, setActiveGuidelineTab] = useState('overall');
 
@@ -90,34 +80,16 @@ const SECODashboard = () => {
         setIsLoadingEvaluation(true);
         console.log("Fetching hotspot data...");
         const data = await fetchEvaluationData();
-        console.log("Received data:", data);
         
-        // Process the data for hotspots visualization
-        if (data.navigationFlows && data.navigationFlows.length > 0) {
-          console.log("Processing navigation flows:", data.navigationFlows);
-          // Extract and organize navigation flow data for visualization
-          const hotspotMetrics = processNavigationFlowsForHotspots(data.navigationFlows);
-          console.log("Processed hotspot metrics:", hotspotMetrics);
-          setEvaluationData(prev => ({ ...prev, hotspotMetrics }));
-        } else {
-          console.warn("No navigation flows data available");
-        }
-        
-        if (data.heatmapData && data.heatmapData.length > 0) {
-          console.log("Setting heatmap data:", data.heatmapData);
-          // Make sure heatmap data is properly formatted
-          setEvaluationData(prev => ({ ...prev, heatmapData: data.heatmapData }));
-        } else {
-          console.warn("No heatmap data available");
-        }
-        
-        // Also store the task completion times
-        if (data.taskCompletionTimes && data.taskCompletionTimes.length > 0) {
-          console.log("Setting task completion times:", data.taskCompletionTimes);
-          setEvaluationData(prev => ({ ...prev, taskCompletionTimes: data.taskCompletionTimes }));
-        } else {
-          console.warn("No task completion data available");
-        }
+        // Just use the data directly without additional processing for now
+        setEvaluationData(prev => ({ 
+          ...prev, 
+          hotspotMetrics: {
+            topPaths: data.navigationFlows,
+            frequencyByDestination: data.navigationFlows,
+            timeByPath: data.navigationFlows
+          }
+        }));
         
         setIsLoadingEvaluation(false);
       } catch (error) {
@@ -153,7 +125,7 @@ const SECODashboard = () => {
                 <Info className="mr-2" size={20} /> SECO Transparency Dashboard
                 <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Sustainable Transparency KPIs</span>
               </h1>
-              <p className="text-gray-500 text-sm">Last updated: March 5, 2023</p>
+              <p className="text-gray-500 text-sm">Last updated: March 5, 2025</p>
             </div>
             <div className="flex items-center space-x-2">
               <div className="text-sm text-gray-500 mr-2">Timeframe:</div>
