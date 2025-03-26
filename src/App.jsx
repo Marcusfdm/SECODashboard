@@ -1,13 +1,20 @@
-import React from 'react';
-import SECODashboard from './SECODashboard';
-import './index.css'; // For Tailwind CSS
+// src/App.jsx
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SECODashboard from './pages/SECODashboard';
+import './styles/App.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="container mx-auto py-4 px-2">
-      <SECODashboard />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<SECODashboard />} />
+          <Route path="*" element={<SECODashboard />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
